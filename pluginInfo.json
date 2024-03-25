@@ -1,0 +1,9 @@
+{
+    "metadata_format_version": "1",
+    "name": "vtf_exporter",
+    "version": "0.1.1",
+    "author": "Zeus",
+    "email": "https://tf2maps.net/members/zeus.28272/",
+    "min_designer_version": "2019.2",
+    "platform": "any"
+}

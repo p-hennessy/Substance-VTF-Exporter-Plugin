@@ -11,11 +11,18 @@
 ##########################################################################
  
 import sd 
+import logging
  
 from vtf_exporter import menu
 
+logger = logging.getLogger("VTF Exporter") 
+
 
 def initializeSDPlugin():
+    logger.addHandler(sd.getContext().createRuntimeLogHandler()) 
+    logger.propagate = False 
+    logger.setLevel(logging.DEBUG) 
+
     menu.create_menu()
 
 

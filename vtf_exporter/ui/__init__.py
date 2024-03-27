@@ -37,7 +37,7 @@ def load_ui_file(filename, parent=None):
     path = os.path.join(current_directory, filename)
     
     loader = QtUiTools.QUiLoader() 
-    uifile = QtCore.QFile(filename) 
+    uifile = QtCore.QFile(path) 
     uifile.open(QtCore.QFile.ReadOnly) 
     ui = loader.load(uifile, parent) 
     uifile.close() 

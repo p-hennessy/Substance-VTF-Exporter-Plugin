@@ -1,9 +1,9 @@
 {
     "metadata_format_version": "1",
     "name": "vtf_exporter",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "author": "Patrick 'Zeus' Hennessy",
     "email": "https://tf2maps.net/members/zeus.28272/",
-    "min_designer_version": "2019.2",
-    "platform": "windows"
+    "min_designer_version": "2022.2",
+    "platform": "any"
 }

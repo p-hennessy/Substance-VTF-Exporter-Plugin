@@ -1,7 +1,11 @@
 # VTF Exporter for Substance 3D Designer
 
+![Static Badge](https://img.shields.io/badge/Compatible_Versions-%3E2022.2-blue?style=flat-square&logo=adobe)
+![GitHub License](https://img.shields.io/github/license/p-hennessy/Substance-VTF-Exporter-Plugin?style=flat-square)
+
+
 > [!WARNING]
-> This plugin is still in very early alpha / active development. I made no gaurentees of stability or reverse compatibility.
+> This plugin is still in very early alpha / active development. I make no gaurentees of stability or reverse compatibility.
 
 A plugin for Substance 3D Designer that allows one to do bulk exporting of materials into the Source Engine's VTF format
 

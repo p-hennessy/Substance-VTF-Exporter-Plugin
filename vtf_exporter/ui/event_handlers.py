@@ -32,7 +32,7 @@ def on_btn_save_global_config(widget):
     vtex_location_path = pathlib.Path(vtex_location) / "vtex.exe"
 
     if not vtex_location_path.exists():
-        dialogs.notify(f"vtex.exe could not be found at {vtex_location}")
+        dialogs.critical(f"vtex.exe could not be found at {vtex_location}")
         return
 
     config_data = {
@@ -42,7 +42,7 @@ def on_btn_save_global_config(widget):
     try:
         config.save_global_config(config_data)
     except Exception as e:
-        dialogs.notify(f"Failed to save global config.\n {e}")
+        dialogs.critical(f"Failed to save global config.\n {e}")
 
     set_saved(widget.lbl_global_config)
 
@@ -76,7 +76,7 @@ def on_btn_save_graph_config(widget):
     try:
         config.save_graph_config(graph_uuid, config_data)
     except Exception as e:
-        dialogs.notify(f"Failed to graph config.\n {e}")
+        dialogs.critical(f"Failed to save graph config.\n {e}")
     
     set_saved(widget.lbl_graph_config)
 

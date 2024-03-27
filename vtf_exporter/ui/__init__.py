@@ -1,5 +1,4 @@
 import sd 
-from PySide2 import QtWidgets 
 from PySide2 import QtCore, QtWidgets, QtUiTools
 from PySide2.QtWidgets import QApplication, QFileDialog
 
@@ -16,11 +15,15 @@ def create_panel():
     ui_manager = app.getQtForPythonUIMgr() 
     DOCK = ui_manager.newDockWidget(identifier="vtf_exporter", title="VTF Exporter") 
 
+    layout = QtWidgets.QVBoxLayout()
+    DOCK.setLayout(layout)
+
     widget = load_ui_file("panel.ui", parent=DOCK) 
     load_global_settings(widget)   
     setup_event_handlers(ui_manager, widget)
+    layout.addWidget(widget)
     widget.show()
-
+    
 
 def destroy_panel():
     global DOCK
@@ -34,7 +37,7 @@ def load_ui_file(filename, parent=None):
     path = os.path.join(current_directory, filename)
     
     loader = QtUiTools.QUiLoader() 
-    uifile = QtCore.QFile(path) 
+    uifile = QtCore.QFile(filename) 
     uifile.open(QtCore.QFile.ReadOnly) 
     ui = loader.load(uifile, parent) 
     uifile.close() 

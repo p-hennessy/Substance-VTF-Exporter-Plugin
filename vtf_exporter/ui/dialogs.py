@@ -9,12 +9,22 @@ def get_directory(prompt="Select a folder"):
     return directory
 
 
-def notify(message):
+def notify(msgbox_type, message):
     app = sd.getContext().getSDApplication() 
     uiMgr = app.getQtForPythonUIMgr() 
     mainWindow = uiMgr.getMainWindow() 
 
-    dialog = QtWidgets.QMessageBox(parent=mainWindow)
-    dialog.setWindowTitle("VTF Exporter")
-    dialog.setText(message)
+    dialog = msgbox_type(mainWindow, "VTF Exporter", message)
     dialog.show()
+
+
+def critical(message):
+    notify(QtWidgets.QMessageBox.critical, message)
+
+
+def informational(message):
+    notify(QtWidgets.QMessageBox.informational, message)
+
+
+def warning(message):
+    notify(QtWidgets.QMessageBox.warning, message)

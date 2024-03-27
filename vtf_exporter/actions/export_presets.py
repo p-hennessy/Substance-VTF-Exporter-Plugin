@@ -25,36 +25,36 @@ def export_presets():
     logger.info("Running error checking before export...")
 
     if not global_config.get("vtex_location"):
-        dialogs.notify("You need to configure your VTEX location to run this function.")
+        dialogs.critical("You need to configure your VTEX location to run this function.")
         return
 
     vtex_location = Path(global_config.get("vtex_location"))
     vtex_exe = vtex_location / "vtex.exe"
     if not vtex_exe.exists():
-        dialogs.notify(f"vtex.exe could not be found at {vtex_location}") 
+        dialogs.critical(f"vtex.exe could not be found at {vtex_location}") 
         return
 
     if not graph:
-        dialogs.notify("Please select a graph to run this function on")
+        dialogs.critical("Please select a graph to run this function on")
         return
 
     graph_uuid = get_graph_uuid()
     graph_config = config.get_graph_config(graph_uuid)
 
     if not graph_config:
-        dialogs.notify("You must setup and / or save your graph configuration to run this function")
+        dialogs.critical("You must setup and / or save your graph configuration to run this function")
         return
 
     if not graph_config.get("export_location"):
-        dialogs.notify("You must have a valid export location")
+        dialogs.critical("You must have a valid export location")
         retur 
 
     if len(graph.getOutputNodes()) == 0:
-        dialogs.notify("You need graph outputs to run this function")
+        dialogs.critical("You need graph outputs to run this function")
         return
 
     if len(graph.getPresets()) == 0:
-        dialogs.notify("You need to set up graph presets to run this function")
+        dialogs.critical("You need to set up graph presets to run this function")
         return 
 
     logger.info("Saving current graph input settings...")

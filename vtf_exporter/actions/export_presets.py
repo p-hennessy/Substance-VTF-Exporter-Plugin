@@ -9,17 +9,53 @@ import tempfile
 import logging
 
 from vtf_exporter import config
+from vtf_exporter.ui import dialogs
+from vtf_exporter.utils import get_graph_uuid
 
 logger = logging.getLogger("VTF Exporter") 
 
 
-def bulk_export():
+def export_presets():
     ctx = sd.getContext()
     app = ctx.getSDApplication()
     uiMgr = app.getQtForPythonUIMgr()
     graph = uiMgr.getCurrentGraph()
+    global_config = config.get_global_config()
 
-    # TODO Error checking for if VTEX config is setup or not.
+    logger.info("Running error checking before export...")
+
+    if not global_config.get("vtex_location"):
+        dialogs.notify("You need to configure your VTEX location to run this function.")
+        return
+
+    vtex_location = Path(global_config.get("vtex_location"))
+    vtex_exe = vtex_location / "vtex.exe"
+    if not vtex_exe.exists():
+        dialogs.notify(f"vtex.exe could not be found at {vtex_location}") 
+        return
+
+    if not graph:
+        dialogs.notify("Please select a graph to run this function on")
+        return
+
+    graph_uuid = get_graph_uuid()
+    graph_config = config.get_graph_config(graph_uuid)
+
+    if not graph_config:
+        dialogs.notify("You must setup and / or save your graph configuration to run this function")
+        return
+
+    if not graph_config.get("export_location"):
+        dialogs.notify("You must have a valid export location")
+        retur 
+
+    if len(graph.getOutputNodes()) == 0:
+        dialogs.notify("You need graph outputs to run this function")
+        return
+
+    if len(graph.getPresets()) == 0:
+        dialogs.notify("You need to set up graph presets to run this function")
+        return 
 
     logger.info("Saving current graph input settings...")
 
@@ -36,7 +72,12 @@ def bulk_export():
 
     for preset in graph.getPresets():
         set_preset(graph, preset)
-        save_outputs_as_vtf(graph, preset.getLabel())
+        save_outputs_as_vtf(
+            graph, 
+            preset.getLabel(), 
+            global_config['vtex_location'], 
+            graph_config['export_location']
+        )
 
     # Reset graph inputs
     logger.info("Reseting graph input settings...")
@@ -58,10 +99,8 @@ def set_preset(graph, preset):
     graph.compute()
 
 
-def save_outputs_as_vtf(graph, preset_name):
-    plugin_config = config.get_vtex_config_file()
-    vtex_exe = plugin_config.get("vtex_path")
-    # TODO Error handling if vtex path is not configured
+def save_outputs_as_vtf(graph, preset_name, vtex_location, export_location):
+    vtex_exe = Path(vtex_location) / "vtex.exe"
 
     for node in graph.getOutputNodes():
         props = node.getProperties(SDPropertyCategory.Output)
@@ -71,30 +110,22 @@ def save_outputs_as_vtf(graph, preset_name):
         output_name = props[0].getId()
         
         file_name = f"{graph.getIdentifier()}_{preset_name}_{output_name}"
-        # logger.debug(f"File name will be {file_name}")
 
         save_temp_dir = tempfile.mkdtemp()
         save_temp_file = os.path.join(str(save_temp_dir), f"{file_name}.tga")
         save_vtex_config_file = os.path.join(str(save_temp_dir), f"{file_name}.txt")
-        # logger.debug(f"Temp dir: {save_temp_dir}. Temp file: {save_temp_file}. VTEX Config File: {save_vtex_config_file}")
 
-        # TODO Take a filepath in config?
-        save_dir = Path(f'C:/Users/phenn/Desktop')
-
-        # TODO Take additional args based on alpha channel
-        # logger.debug(f"Saving config file to {save_vtex_config_file}")
+        save_dir = Path(export_location)
 
         with open(save_vtex_config_file, "w") as file:
+            # TODO change this to change compression format
             file.write("stripalphachannel 1\n")
 
-        # logger.debug(f"Saving file to {save_temp_file}")
         texture.save(save_temp_file)
 
-        # logger.debug(f"Running VTEX on {save_vtex_config_file}")
         command = [str(vtex_exe), "-nopause", "-outdir", str(save_dir), save_vtex_config_file]
-        output = subprocess.run(command, shell=True, capture_output=True)
+        subprocess.run(command, shell=True, capture_output=True)
 
-        # logger.debug("Cleaning up temp files")
         os.remove(save_temp_file)
         os.remove(save_vtex_config_file)
 

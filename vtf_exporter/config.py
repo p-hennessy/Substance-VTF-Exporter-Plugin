@@ -3,19 +3,35 @@ import json
 from vtf_exporter.constants import *
 
 
-def get_vtex_config_file():
-    if os.path.exists(CONFIG_DIR):
-        if os.path.exists(CONFIG_FILE):
-            with open(CONFIG_FILE) as file:
-                return json.load(file)
+def save_global_config(config_data):
+    if not CONFIG_DIR.exists():
+        os.mkdir(CONFIG_DIR)
+    
+    with open(GLOBAL_CONFIG_FILE, "w") as file:
+        file.write(json.dumps(config_data, indent=4))
+    
 
+def get_global_config():
+    if GLOBAL_CONFIG_FILE.exists():
+        with GLOBAL_CONFIG_FILE.open("r") as file:          
+            return json.load(file)
     return {}
 
 
-def save_vtex_config_file(config_data):
-    if not os.path.exists(CONFIG_DIR):
+def save_graph_config(graph_uuid, config_data):
+    config_file = CONFIG_DIR / f"{graph_uuid}.json"
+
+    if not CONFIG_DIR.exists():
         os.mkdir(CONFIG_DIR)
-    
-    with open(CONFIG_FILE, "w") as file:
+
+    with config_file.open("w") as file:
         file.write(json.dumps(config_data, indent=4))
     
+
+def get_graph_config(graph_uuid):
+    config_file = CONFIG_DIR / f"{graph_uuid}.json"
+
+    if config_file.exists():
+        with config_file.open("r") as file:
+            return json.load(file)
+    return {}

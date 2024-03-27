@@ -13,7 +13,7 @@
 import sd 
 import logging
  
-from vtf_exporter import menu
+from vtf_exporter import ui
 
 logger = logging.getLogger("VTF Exporter") 
 
@@ -23,11 +23,12 @@ def initializeSDPlugin():
     logger.propagate = False 
     logger.setLevel(logging.DEBUG) 
 
-    menu.create_menu()
+    ui.create_panel()
 
 
 def uninitializeSDPlugin(): 
-    menu.destroy_menu()
+    ui.destroy_panel()
+
 
 
 

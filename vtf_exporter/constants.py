@@ -1,8 +1,21 @@
 import os
+import sys
+import pathlib
 
-SUBSTANCE_DIR = os.path.join(os.getenv('APPDATA') , "Allegorithmic", "Substance Designer")
-CONFIG_DIR = os.path.join(SUBSTANCE_DIR, "vtf_exporter")
-CONFIG_FILE = os.path.join(CONFIG_DIR, "config.json")
 
-PLUGIN_VERSION = "0.1.0"
-MAIN_MENU_NAME = "vtf_exporter_main"
+def get_config_base_path():
+    home = pathlib.Path.home()
+
+    if sys.platform == "win32":
+        return home / "AppData/Roaming"
+    elif sys.platform == "linux":
+        return home / ".local/share"
+    elif sys.platform == "darwin":
+        return home / "Library/Application Support"
+
+SUBSTANCE_DIR = get_config_base_path() / "Allegorithmic" / "Substance Designer"
+
+CONFIG_DIR = SUBSTANCE_DIR / "vtf_exporter"
+GLOBAL_CONFIG_FILE = CONFIG_DIR / "global_configuration.json"
+
+PLUGIN_VERSION = "0.2.0"
